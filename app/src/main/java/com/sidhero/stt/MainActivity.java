@@ -2,29 +2,35 @@ package com.sidhero.stt;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneHelper;
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneInputStream;
 import com.ibm.watson.developer_cloud.android.library.audio.utils.ContentType;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Transcript;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeCallback;
 
 public class MainActivity extends AppCompatActivity {
+
     private boolean permissionToRecordAccepted = false;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final int RECORD_REQUEST_CODE = 101;
@@ -33,20 +39,61 @@ public class MainActivity extends AppCompatActivity {
     private MicrophoneInputStream capture;
     private MicrophoneHelper microphoneHelper;
     public ImageButton btnRecord;
-    public TextView inputMessage;
+    public TextView inputMessage,print;
     public static final String tag="sidd";
     public String text;
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+    private BottomNavigationView mBottomNav;
+    private ImageButton RecordImageButton;
+    int t=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         btnRecord=(ImageButton)findViewById(R.id.imageButton);
         inputMessage=(TextView) findViewById(R.id.textView);
+        print=(TextView)findViewById(R.id.textView2);
         microphoneHelper = new MicrophoneHelper(this);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
+        mBottomNav = (BottomNavigationView)findViewById(R.id.NavBot);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        Menu menu = mBottomNav.getMenu();
+        MenuItem menuItem = menu.getItem(1);
+        menuItem.setChecked(true);
+
+        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.logs:{
+                        Intent i =new Intent(getApplicationContext(),logs.class);
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        break;
+                    }
+                    case R.id.settings:{
+                        Intent i =new Intent(getApplicationContext(),settings.class);
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
 
     public void record(View view) {
         speechService = new SpeechToText();
@@ -54,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
         speechService.setEndPoint("https://stream.watsonplatform.net/speech-to-text/api");
 
         if(!listening) {
+            inputMessage.setVisibility(View.INVISIBLE);
             inputMessage.setText("");
+            text = "";
             capture = microphoneHelper.getInputStream(true);
             new Thread(new Runnable() {
                 @Override public void run() {
@@ -66,19 +115,31 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).start();
             listening = true;
-            Toast.makeText(MainActivity.this,"Listening....Click to Stop", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this,"Listening....Click to Stop", Toast.LENGTH_LONG).show();
+            print.setText("LISTENING...");
 
         } else {
             try {
+                print.setText("Press to start recording!");
+//                try{
+//                    Thread.sleep(2000);
+//                }
+//                catch(Exception e){
+//
+//                }
                 microphoneHelper.closeInputStream();
                 listening = false;
-                Toast.makeText(MainActivity.this,"Stopped Listening....Click to Start", Toast.LENGTH_LONG).show();
+                Log.d("finishRecord",text);
+                //showMicText(text);
+                //Toast.makeText(MainActivity.this,"Stopped Listening....Click to Start", Toast.LENGTH_LONG).show();
+                inputMessage.setVisibility(View.VISIBLE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
     }
+
     private boolean checkInternetConnection() {
         // get Connectivity Manager object to check connection
         ConnectivityManager cm =
@@ -124,19 +185,25 @@ public class MainActivity extends AppCompatActivity {
             if(speechResults.getSpeakerLabels() !=null)
             {
                 recoTokens.add(speechResults);
-                Log.i("SPEECHRESULTS",speechResults.getSpeakerLabels().get(0).toString());
-                
+                Log.i("SPEECHRESULTS",speechResults.getSpeakerLabels().toString());
+                /*int k=t;
+                t=speechResults.getSpeakerLabels().get(0).getSpeaker();
+                Log.d("mihirmihir", String.valueOf(t));
+                if(k!=t){
+                    Log.d("mihirmihirif", String.valueOf(t));
+                    //text = text.concat("\nSPEAKER "+t+": ");
+                }*/
 
             }
             if(speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {
-                 text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
+                text = (speechResults.getResults().get(0).getAlternatives().get(0).getTranscript());
                 //Log.d(tag,text);
                 //showMicText(text);
             }
             else
             {
                 boolean isFound = text.indexOf("%HESITATION") !=-1? true: false;
-                Log.d(tag,text);  
+                Log.d(tag,text);
                 if(isFound){
                     text =  text.replace("%HESITATION","");
                     Log.d(tag,"if:"+isFound);
@@ -212,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
     private void showMicText(final String text) {
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                inputMessage.setVisibility(View.VISIBLE);
                 inputMessage.append(text);
             }
         });
@@ -229,12 +295,50 @@ public class MainActivity extends AppCompatActivity {
     private void showError(final Exception e) {
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         });
     }
 
 
-}
 
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_nav_side, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }*/
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToggle.onOptionsItemSelected(item)){
+            /*switch(item.getItemId()){
+                case R.id.home:
+                {
+                    Intent i =new Intent(getApplicationContext(),home.class);
+                    startActivity(i);
+                    Log.d("home","home");
+                    Toast.makeText(getApplicationContext(), "mihir", Toast.LENGTH_LONG).show();
+                    break;
+                }
+                case R.id.record:
+                {
+                    Intent i =new Intent(getApplicationContext(),home.class);
+                    startActivity(i);
+                    Log.d("home","home");
+                    Toast.makeText(getApplicationContext(), "mihir", Toast.LENGTH_LONG).show();
+                    break;
+                }
+
+            }*/
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+}
