@@ -2,6 +2,7 @@ package com.sidhero.stt;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -12,11 +13,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +33,15 @@ import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeCallback;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private boolean permissionToRecordAccepted = false;
@@ -39,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private MicrophoneInputStream capture;
     private MicrophoneHelper microphoneHelper;
     public ImageButton btnRecord;
-    public TextView inputMessage,print;
+    public TextView print;
     public static final String tag="sidd";
     public String text;
 
@@ -48,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNav;
     private ImageButton RecordImageButton;
     int t=0;
+    public EditText mEditText, inputMessage;
+    public final Context context = this;
+    private static String FILE_NAME = "record001";
+    ArrayList<String> al=new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnRecord=(ImageButton)findViewById(R.id.imageButton);
-        inputMessage=(TextView) findViewById(R.id.textView);
+        inputMessage=(EditText) findViewById(R.id.textView);
         print=(TextView)findViewById(R.id.textView2);
         microphoneHelper = new MicrophoneHelper(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
         mBottomNav = (BottomNavigationView)findViewById(R.id.NavBot);
+
 
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
@@ -76,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.logs:{
                         Intent i =new Intent(getApplicationContext(),logs.class);
+                        i.putExtra("QuestionListExtra", al);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
@@ -94,6 +113,147 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void save(View v) {
+
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.prompts, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // get user input and set it to result
+                                // edit text
+                                //File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+                                FILE_NAME = userInput.getText().toString();
+                                String text = inputMessage.getText().toString();
+                                al.add(FILE_NAME);
+                                FileOutputStream fos = null;
+
+                                try {
+
+                                    fos = openFileOutput(FILE_NAME+".txt", MODE_PRIVATE);
+                                    fos.write(text.getBytes());
+
+                                    inputMessage.getText().clear();
+                                    //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (fos != null) {
+                                        try {
+                                            fos.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+
+    }
+
+    public void load(View v) {
+
+        final LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.prompts, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // get user input and set it to result
+                                // edit text
+                                //File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+                                FILE_NAME = userInput.getText().toString();
+                                Log.d("mihir",FILE_NAME);
+
+                                String text;
+
+
+                                FileInputStream fis = null;
+
+                                try {
+                                    fis = openFileInput(FILE_NAME+".txt");
+                                    InputStreamReader isr = new InputStreamReader(fis);
+                                    BufferedReader br = new BufferedReader(isr);
+                                    StringBuilder sb = new StringBuilder();
+
+                                    while ((text = br.readLine()) != null) {
+                                        sb.append(text).append("\n");
+                                    }
+
+                                    inputMessage.setText(sb.toString());
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (fis != null) {
+                                        try {
+                                            fis.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+//        Intent intent =new Intent(this,logs.class);
+//        intent.putExtra("file_name", FILE_NAME);
+//        startActivity(intent);
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
 
     public void record(View view) {
         speechService = new SpeechToText();
@@ -116,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
             }).start();
             listening = true;
             //Toast.makeText(MainActivity.this,"Listening....Click to Stop", Toast.LENGTH_LONG).show();
-            print.setText("LISTENING...");
+            print.setText("LISTENING...Press again to stop.");
 
         } else {
             try {
@@ -133,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
                 //showMicText(text);
                 //Toast.makeText(MainActivity.this,"Stopped Listening....Click to Start", Toast.LENGTH_LONG).show();
                 inputMessage.setVisibility(View.VISIBLE);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -186,13 +347,13 @@ public class MainActivity extends AppCompatActivity {
             {
                 recoTokens.add(speechResults);
                 Log.i("SPEECHRESULTS",speechResults.getSpeakerLabels().toString());
-                /*int k=t;
+                int k=t;
                 t=speechResults.getSpeakerLabels().get(0).getSpeaker();
                 Log.d("mihirmihir", String.valueOf(t));
                 if(k!=t){
                     Log.d("mihirmihirif", String.valueOf(t));
-                    //text = text.concat("\nSPEAKER "+t+": ");
-                }*/
+                    showMicText("\nSPEAKER "+t+": ");
+                }
 
             }
             if(speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {

@@ -7,14 +7,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class logs extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private BottomNavigationView mBottomNav;
+    ListView list;
+    public int temp;
+    List<String> arr = new ArrayList<String>();
+
+    ArrayList<String> listItems=new ArrayList<String>();
+
+    //DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
+    ArrayAdapter<String> adapter;
+    private ArrayList<String> arrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +42,23 @@ public class logs extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
         mBottomNav = (BottomNavigationView)findViewById(R.id.NavBot);
+        list = (ListView) findViewById(R.id.list);
+        arrayList = new ArrayList<String>();
+        arr = (ArrayList<String>)getIntent().getSerializableExtra("QuestionListExtra");
+
+        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arr);
+
+        // Here, you set the data in your ListView
+        list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent =new Intent(getApplicationContext(),fileDisplay.class);
+                intent.putExtra("fileitem",arr.get(position));
+                startActivity(intent);
+            }
+        });
 
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
@@ -31,6 +66,10 @@ public class logs extends AppCompatActivity {
         Menu menu = mBottomNav.getMenu();
         MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
+
+
+
+
 
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
@@ -55,6 +94,7 @@ public class logs extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
