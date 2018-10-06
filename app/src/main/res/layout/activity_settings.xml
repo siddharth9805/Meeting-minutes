@@ -8,6 +8,59 @@
     tools:context=".MainActivity"
     android:id="@+id/drawerLayout">
 
+    <TextView
+        android:id="@+id/TxtSetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="settings"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:padding="@dimen/fab_margin"
+        android:textColor="#000000"
+
+        />
+
+    <Switch
+        android:id="@+id/simpleSwitch1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch1"
+        android:layout_below="@+id/TxtSetting"
+        android:padding="@dimen/fab_margin"
+        android:checked="true"
+        android:gravity="left"
+
+        />
+
+    <Switch
+        android:id="@+id/simpleSwitch2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Switch2"
+        android:layout_below="@+id/simpleSwitch1"
+
+        android:padding="@dimen/fab_margin"
+        android:checked="true"
+        android:gravity="left"
+
+        />
+
+    <Switch
+        android:id="@+id/simpleSwitch3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch3"
+        android:layout_below="@+id/simpleSwitch2"
+
+        android:padding="@dimen/fab_margin"
+        android:checked="true"
+        android:gravity="left"
+
+        />
+
 
     <android.support.design.widget.NavigationView
         android:layout_width="wrap_content"

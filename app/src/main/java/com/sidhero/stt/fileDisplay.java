@@ -15,9 +15,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class fileDisplay extends AppCompatActivity {
-    TextView display, displayTrans;
+    TextView display, displayTrans, displaySum;
     public String text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +27,12 @@ public class fileDisplay extends AppCompatActivity {
         setContentView(R.layout.activity_file_display);
         display=(TextView)findViewById(R.id.textView3);
         displayTrans = (TextView) findViewById(R.id.textView4);
+        displaySum = (TextView) findViewById(R.id.textView5);
         text=getIntent().getExtras().getString("fileitem");
         display.setText(text);
         load();
+        String temp = displayTrans.getText().toString();
+        displaySum.setText(SummarizerDemo(temp));
 
     }
 
@@ -109,4 +114,23 @@ public class fileDisplay extends AppCompatActivity {
 //        // show it
 //        alertDialog.show();
    }
+
+    public String SummarizerDemo(String t) {
+        String text = t; //"the meeting is very important because a foreign dignitary is visiting";
+        text  = text.toLowerCase();
+        String[] list = text.replaceAll("\\.", ". " ).split("\\s+");
+        ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
+        for(int i=0;i<test.size();i++)
+        {
+            String temp = test.get(i).toString();
+            if(temp.equalsIgnoreCase("a")||temp.equalsIgnoreCase("the")||temp.equalsIgnoreCase("an")||temp.equalsIgnoreCase("very")||temp.equalsIgnoreCase("is")||temp.equalsIgnoreCase("hello")||temp.equalsIgnoreCase("good")||temp.equalsIgnoreCase("morning")){
+                test.remove(i);
+            }
+        }
+        String output="";
+        for(int i=0;i<test.size();i++){
+            output = output.concat(test.get(i).toString()+" ");
+        }
+        return output;
+    }
 }

@@ -34,6 +34,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/TxtLogs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recorded"
+            android:textSize="25dp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:padding="@dimen/fab_margin"
+            android:textColor="#000000"
+            />
+
         <ListView
             android:id="@+id/list"
             android:layout_width="fill_parent"

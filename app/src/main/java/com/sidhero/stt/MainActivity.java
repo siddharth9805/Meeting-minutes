@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                 //File root = new File(Environment.getExternalStorageDirectory(), "Notes");
                                 FILE_NAME = userInput.getText().toString();
                                 String text = inputMessage.getText().toString();
+                                String text2 = text;
                                 al.add(FILE_NAME);
                                 FileOutputStream fos = null;
 
@@ -161,6 +163,30 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
+
+                                /*String text3 = SummarizerDemo(text2);
+                                FileOutputStream fos2 = null;
+
+                                try {
+
+                                    fos2 = openFileOutput(FILE_NAME+"Sum.txt", MODE_PRIVATE);
+                                    fos2.write(text3.getBytes());
+
+                                    //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (fos2 != null) {
+                                        try {
+                                            fos2.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }*/
+
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -179,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void load(View v) {
+    /*public void load(View v) {
 
         final LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.prompts, null);
@@ -253,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
 
         // show it
         alertDialog.show();
-    }
+    }*/
 
     public void record(View view) {
         speechService = new SpeechToText();
@@ -331,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 .timestamps(true)
                 .inactivityTimeout(2000)
                 .wordAlternativesThreshold((double) 0.9)
+                .smartFormatting(true)
                 //TODO: Uncomment this to enable Speaker Diarization
                 .speakerLabels(true)
                 .build();
@@ -500,6 +527,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public String SummarizerDemo(String t) {
+        String text = t; //"the meeting is very important because a foreign dignitary is visiting";
+        text  = text.toLowerCase();
+        String[] list = text.replaceAll("\\.", ". " ).split("\\s+");
+        ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
+        for(int i=0;i<test.size();i++)
+        {
+            String temp = test.get(i).toString();
+            if(temp.equalsIgnoreCase("a")||temp.equalsIgnoreCase("the")||temp.equalsIgnoreCase("an")||temp.equalsIgnoreCase("very")||temp.equalsIgnoreCase("is")||temp.equalsIgnoreCase("hello")||temp.equalsIgnoreCase("good")||temp.equalsIgnoreCase("morning")){
+                test.remove(i);
+            }
+        }
+        String output=null;
+        for(int i=0;i<test.size();i++){
+            assert output != null;
+            output = output.concat(test.get(i).toString()+" ");
+        }
+        return output;
     }
 
 }
