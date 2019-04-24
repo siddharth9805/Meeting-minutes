@@ -32,32 +32,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/TxtLogs"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recorded"
-            android:textSize="25dp"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:padding="@dimen/fab_margin"
-            android:textColor="#000000"
-            />
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            tools:listitem="@layout/list_item"
-            android:layout_below="@id/TxtLogs"
-            />
+            android:text="TO DO LIST"
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
+
 </android.support.v4.widget.DrawerLayout>
+
 
 

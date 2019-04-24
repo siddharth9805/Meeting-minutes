@@ -27,7 +27,9 @@
         </activity>
         <activity android:name=".logs" />
         <activity android:name=".settings" />
-        <activity android:name=".fileDisplay"></activity>
+        <activity android:name=".fileDisplay" />
+        <activity android:name=".CalandarMain" />
+        <activity android:name=".ToDo"></activity>
     </application>
 
 </manifest>

@@ -8,9 +8,20 @@
         />
 
     <item
+        android:title="To-Do"
+        android:id="@+id/todo"
+        android:icon="@drawable/ic_todo"
+        />
+ <item
         android:title="Home"
         android:id="@+id/home"
         android:icon="@drawable/ic_home"
+        />
+
+    <item
+        android:title="Calendar"
+        android:id="@+id/calendar"
+        android:icon="@drawable/ic_today"
         />
 
     <item

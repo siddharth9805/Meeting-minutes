@@ -8,58 +8,7 @@
     tools:context=".MainActivity"
     android:id="@+id/drawerLayout">
 
-    <TextView
-        android:id="@+id/TxtSetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="settings"
-        android:textSize="25dp"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:padding="@dimen/fab_margin"
-        android:textColor="#000000"
 
-        />
-
-    <Switch
-        android:id="@+id/simpleSwitch1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Switch1"
-        android:layout_below="@+id/TxtSetting"
-        android:padding="@dimen/fab_margin"
-        android:checked="true"
-        android:gravity="left"
-
-        />
-
-    <Switch
-        android:id="@+id/simpleSwitch2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        android:text="Switch2"
-        android:layout_below="@+id/simpleSwitch1"
-
-        android:padding="@dimen/fab_margin"
-        android:checked="true"
-        android:gravity="left"
-
-        />
-
-    <Switch
-        android:id="@+id/simpleSwitch3"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Switch3"
-        android:layout_below="@+id/simpleSwitch2"
-
-        android:padding="@dimen/fab_margin"
-        android:checked="true"
-        android:gravity="left"
-
-        />
 
 
     <android.support.design.widget.NavigationView
@@ -87,15 +36,66 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="This is Settings page!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/TxtSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="settings"
+            android:textSize="25dp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:padding="@dimen/fab_margin"
+            android:textColor="#000000"
+
+            />
+
+        <Switch
+            android:id="@+id/simpleSwitch1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Smart Formating"
+            android:layout_below="@+id/TxtSetting"
+            android:padding="@dimen/fab_margin"
+            android:checked="true"
+            android:gravity="left"
+            />
+
+        <Switch
+            android:id="@+id/simpleSwitch2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Summarise"
+            android:layout_below="@+id/simpleSwitch1"
+            android:padding="@dimen/fab_margin"
+            android:checked="true"
+            android:gravity="left"
+            />
+
+        <Switch
+            android:id="@+id/simpleSwitch3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Store Audio"
+            android:layout_below="@+id/simpleSwitch2"
+
+            android:padding="@dimen/fab_margin"
+            android:checked="false"
+            android:gravity="left"
+            />
+
+        <Switch
+            android:id="@+id/simpleSwitch4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Differentiate Speakers"
+            android:layout_below="@+id/simpleSwitch3"
+            android:padding="@dimen/fab_margin"
+            android:checked="true"
+            android:gravity="left"
+
+            />
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

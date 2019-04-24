@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         mToggle.syncState();
 
         Menu menu = mBottomNav.getMenu();
-        MenuItem menuItem = menu.getItem(1);
+        MenuItem menuItem = menu.getItem(2);
         menuItem.setChecked(true);
 
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
@@ -95,13 +95,25 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.logs:{
                         Intent i =new Intent(getApplicationContext(),logs.class);
-                        i.putExtra("QuestionListExtra", al);
+                        //i.putExtra("QuestionListExtra", al);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
                     }
                     case R.id.settings:{
                         Intent i =new Intent(getApplicationContext(),settings.class);
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        break;
+                    }
+                    case R.id.calendar:{
+                        Intent i =new Intent(getApplicationContext(),CalandarMain.class);
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        break;
+                    }
+                    case R.id.todo:{
+                        Intent i =new Intent(getApplicationContext(),ToDo.class);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
@@ -140,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                 FILE_NAME = userInput.getText().toString();
                                 String text = inputMessage.getText().toString();
                                 String text2 = text;
-                                al.add(FILE_NAME);
+                                logs.arr.add(FILE_NAME);
                                 FileOutputStream fos = null;
 
                                 try {
@@ -196,6 +208,17 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
+
+        /*String dates="";
+        int i=0;
+        while(i<text.length())
+        {
+
+            i++;
+        }*/
+        /*Log.d("dateCheck", text);
+        addToCalendar(text);*/
+
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
 
@@ -204,6 +227,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    /*private void addToCalendar(String s) {
+            String arr;
+            String s1;
+            s=s+"/ ";
+            s1="";
+            int i=0;
+            arr="";
+            while(s.charAt(i)!=' '){
+                while(s.charAt(i)!='/'){
+                    s1=s1+s.charAt(i);i++;
+                }
+                if(Integer.parseInt(s1)<10){
+                    s1="0"+s1;
+                }
+                arr=s1+"-"+arr;i++;s1="";
+            }
+
+
+            //System.out.println(arr[0]+"\t"+arr[1]+"\t"+arr[2]+"\t"+arr[3]);
+            arr=arr.substring(0,10);
+
+    }*/
 
     /*public void load(View v) {
 
@@ -288,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(!listening) {
             inputMessage.setVisibility(View.INVISIBLE);
-            inputMessage.setText("");
+            //inputMessage.setText("SPEAKER 0:");
             text = "";
             capture = microphoneHelper.getInputStream(true);
             new Thread(new Runnable() {

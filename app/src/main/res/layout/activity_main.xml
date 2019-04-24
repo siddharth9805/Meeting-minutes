@@ -53,7 +53,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_below="@id/TxtHome"
-            android:text="Transcript will appear here..."
             android:layout_centerHorizontal="true"/>
 
         <Button

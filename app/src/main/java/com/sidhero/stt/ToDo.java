@@ -10,53 +10,53 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class settings extends AppCompatActivity {
-
+public class ToDo extends AppCompatActivity {
+    private BottomNavigationView mBottomNav;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
-    private BottomNavigationView mBottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_to_do);
+
+        mBottomNav = (BottomNavigationView) findViewById(R.id.NavBot);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
-        mBottomNav = (BottomNavigationView)findViewById(R.id.NavBot);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
 
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
         Menu menu = mBottomNav.getMenu();
-        MenuItem menuItem = menu.getItem(4);
+        MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
 
 
-        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item){
-                switch (item.getItemId()){
-                    case R.id.home:{
-                        Intent i =new Intent(getApplicationContext(),MainActivity.class);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.home: {
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
                     }
-                    case R.id.logs:{
-                        Intent i =new Intent(getApplicationContext(),logs.class);
+                    case R.id.settings: {
+                        Intent i = new Intent(getApplicationContext(), settings.class);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
                     }
-                    case R.id.calendar:{
-                        Intent i =new Intent(getApplicationContext(),CalandarMain.class);
+                    case R.id.calendar: {
+                        Intent i = new Intent(getApplicationContext(), CalandarMain.class);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
                     }
-                    case R.id.todo:{
-                        Intent i =new Intent(getApplicationContext(),ToDo.class);
+                    case R.id.logs: {
+                        Intent i = new Intent(getApplicationContext(), logs.class);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
@@ -67,16 +67,8 @@ public class settings extends AppCompatActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_nav_side, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }*/
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -107,5 +99,6 @@ public class settings extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
 
 

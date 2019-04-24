@@ -25,7 +25,7 @@ public class logs extends AppCompatActivity {
     private BottomNavigationView mBottomNav;
     ListView list;
     public int temp;
-    List<String> arr = new ArrayList<String>();
+    public static List<String> arr = new ArrayList<String>();
 
     ArrayList<String> listItems=new ArrayList<String>();
 
@@ -44,7 +44,11 @@ public class logs extends AppCompatActivity {
         mBottomNav = (BottomNavigationView)findViewById(R.id.NavBot);
         list = (ListView) findViewById(R.id.list);
         arrayList = new ArrayList<String>();
-        arr = (ArrayList<String>)getIntent().getSerializableExtra("QuestionListExtra");
+//        if(arrayList.size()!=arr.size())
+//        {
+//            arr = (ArrayList<String>)getIntent().getSerializableExtra("QuestionListExtra");
+//        }
+
 
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arr);
 
@@ -68,9 +72,6 @@ public class logs extends AppCompatActivity {
         menuItem.setChecked(true);
 
 
-
-
-
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item){
@@ -83,6 +84,18 @@ public class logs extends AppCompatActivity {
                     }
                     case R.id.settings:{
                         Intent i =new Intent(getApplicationContext(),settings.class);
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        break;
+                    }
+                    case R.id.calendar:{
+                        Intent i =new Intent(getApplicationContext(),CalandarMain.class);
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        break;
+                    }
+                    case R.id.todo:{
+                        Intent i =new Intent(getApplicationContext(),ToDo.class);
                         startActivity(i);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
@@ -105,33 +118,33 @@ public class logs extends AppCompatActivity {
     }*/
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mToggle.onOptionsItemSelected(item)){
-            /*switch(item.getItemId()){
-                case R.id.home:
-                {
-                    Intent i =new Intent(getApplicationContext(),home.class);
-                    startActivity(i);
-                    Log.d("home","home");
-                    Toast.makeText(getApplicationContext(), "mihir", Toast.LENGTH_LONG).show();
-                    break;
-                }
-                case R.id.record:
-                {
-                    Intent i =new Intent(getApplicationContext(),home.class);
-                    startActivity(i);
-                    Log.d("home","home");
-                    Toast.makeText(getApplicationContext(), "mihir", Toast.LENGTH_LONG).show();
-                    break;
-                }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (mToggle.onOptionsItemSelected(item)){
+//            /*switch(item.getItemId()){
+//                case R.id.home:
+//                {
+//                    Intent i =new Intent(getApplicationContext(),home.class);
+//                    startActivity(i);
+//                    Log.d("home","home");
+//                    Toast.makeText(getApplicationContext(), "mihir", Toast.LENGTH_LONG).show();
+//                    break;
+//                }
+//                case R.id.record:
+//                {
+//                    Intent i =new Intent(getApplicationContext(),home.class);
+//                    startActivity(i);
+//                    Log.d("home","home");
+//                    Toast.makeText(getApplicationContext(), "mihir", Toast.LENGTH_LONG).show();
+//                    break;
+//                }
+//
+//            }*/
+//
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
 
-            }*/
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
 

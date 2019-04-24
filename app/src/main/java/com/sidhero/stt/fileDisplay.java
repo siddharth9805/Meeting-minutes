@@ -113,7 +113,7 @@ public class fileDisplay extends AppCompatActivity {
 //
 //        // show it
 //        alertDialog.show();
-   }
+    }
 
     public String SummarizerDemo(String t) {
         String text = t; //"the meeting is very important because a foreign dignitary is visiting";
